@@ -24,7 +24,7 @@ HTTP status code to abort a request with. The header value should be an integer 
 
 This determines if the delay failure is enabled.
 
-**DefaultDelay**
+**DelayDuration**
 
 *Default: 0*
 

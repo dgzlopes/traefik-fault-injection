@@ -7,6 +7,6 @@ summary:  Fault Injection via HTTP headers
 
 testData:
   Delay: true
-  DefaultDelay: 100
+  DelayDuration: 100
   Abort: true
   AbortCode: 400

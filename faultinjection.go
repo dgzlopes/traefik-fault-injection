@@ -10,48 +10,48 @@ import (
 
 // Config the plugin configuration.
 type Config struct {
-	Delay        bool
-	DefaultDelay int
-	Abort        bool
-	AbortCode    int
+	Delay         bool
+	DelayDuration int
+	Abort         bool
+	AbortCode     int
 }
 
 // CreateConfig creates the default plugin configuration.
 func CreateConfig() *Config {
 	return &Config{
-		Delay:        true,
-		DefaultDelay: 0,
-		Abort:        true,
-		AbortCode:    400,
+		Delay:         true,
+		DelayDuration: 0,
+		Abort:         true,
+		AbortCode:     400,
 	}
 }
 
 // FaultInjection plugin
 type FaultInjection struct {
-	next         http.Handler
-	Delay        bool
-	DefaultDelay int
-	Abort        bool
-	AbortCode    int
-	name         string
+	next          http.Handler
+	Delay         bool
+	DelayDuration int
+	Abort         bool
+	AbortCode     int
+	name          string
 }
 
 // New created a new plugin
 func New(ctx context.Context, next http.Handler, config *Config, name string) (http.Handler, error) {
 	return &FaultInjection{
-		Delay:        config.Delay,
-		DefaultDelay: config.DefaultDelay,
-		Abort:        config.Abort,
-		AbortCode:    config.AbortCode,
-		next:         next,
-		name:         name,
+		Delay:         config.Delay,
+		DelayDuration: config.DelayDuration,
+		Abort:         config.Abort,
+		AbortCode:     config.AbortCode,
+		next:          next,
+		name:          name,
 	}, nil
 }
 
 func (a *FaultInjection) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	if a.Delay == true {
 		delayHeader := req.Header.Get("X-Traefik-Fault-Delay-Request")
-		time.Sleep(time.Duration(ParseHeaderValue(delayHeader, a.DefaultDelay)) * time.Millisecond)
+		time.Sleep(time.Duration(ParseHeaderValue(delayHeader, a.DelayDuration)) * time.Millisecond)
 	}
 
 	if a.Abort == true {
