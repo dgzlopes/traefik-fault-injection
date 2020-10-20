@@ -6,5 +6,7 @@ import: github.com/dgzlopes/traefik-fault-injection
 summary:  Fault Injection via HTTP headers
 
 testData:
-  delay: true
-  defaultDelay: 100
+  Delay: true
+  DefaultDelay: 100
+  Abort: true
+  AbortCode: 400

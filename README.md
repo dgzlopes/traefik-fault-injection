@@ -12,6 +12,10 @@ Currently supported header controls:
 
 The duration to delay a request by. The header value should be an integer that specifies the number of milliseconds to throttle the latency for.
 
+**x-traefik-fault-abort-request**
+
+HTTP status code to abort a request with. The header value should be an integer that specifies the HTTP status code to return in response to a request.
+
 ### Plugin options
 
 **Delay**
@@ -25,3 +29,15 @@ This determines if the delay failure is enabled.
 *Default: 0*
 
 The number of number of milliseconds to throttle the latency for.
+
+**Abort**
+
+*Default: true*
+
+This determines if the abort failure is enabled.
+
+**AbortCode**
+
+*Default: 400*
+
+The HTTP status code to return.
