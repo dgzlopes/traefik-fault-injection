@@ -10,40 +10,40 @@ import (
 
 // Config the plugin configuration.
 type Config struct {
-	delay        bool
-	defaultDelay int
+	Delay        bool
+	DefaultDelay int
 }
 
 // CreateConfig creates the default plugin configuration.
 func CreateConfig() *Config {
 	return &Config{
-		delay:        true,
-		defaultDelay: 0,
+		Delay:        true,
+		DefaultDelay: 0,
 	}
 }
 
 // FaultInjection plugin
 type FaultInjection struct {
 	next         http.Handler
-	delay        bool
-	defaultDelay int
+	Delay        bool
+	DefaultDelay int
 	name         string
 }
 
 // New created a new plugin
 func New(ctx context.Context, next http.Handler, config *Config, name string) (http.Handler, error) {
 	return &FaultInjection{
-		delay:        config.delay,
-		defaultDelay: config.defaultDelay,
+		Delay:        config.Delay,
+		DefaultDelay: config.DefaultDelay,
 		next:         next,
 		name:         name,
 	}, nil
 }
 
 func (a *FaultInjection) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
-	if a.delay == true {
+	if a.Delay == true {
 		delayHeader := req.Header.Get("X-Traefik-Fault-Delay-Request")
-		time.Sleep(time.Duration(ParseHeaderValue(delayHeader, a.defaultDelay)) * time.Millisecond)
+		time.Sleep(time.Duration(ParseHeaderValue(delayHeader, a.DefaultDelay)) * time.Millisecond)
 	}
 	a.next.ServeHTTP(rw, req)
 }
