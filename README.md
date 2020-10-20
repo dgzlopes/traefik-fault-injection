@@ -6,4 +6,22 @@ It's highly inspired by the [Envoy Fault Injection filter](https://www.envoyprox
 
 ## Docs
 
-TBD
+Currently supported header controls:
+
+**x-traefik-fault-delay-request**
+
+The duration to delay a request by. The header value should be an integer that specifies the number of milliseconds to throttle the latency for.
+
+### Plugin options
+
+**Delay**
+
+*Default: true*
+
+This determines if the delay failure is enabled.
+
+**DefaultDelay**
+
+*Default: 0*
+
+The number of number of milliseconds to throttle the latency for.
