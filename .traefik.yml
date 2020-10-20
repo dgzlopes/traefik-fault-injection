@@ -1,0 +1,10 @@
+displayName: Fault Injection
+type: middleware
+
+import: github.com/dgzlopes/traefik-fault-injection
+
+summary:  Fault Injection via HTTP headers
+
+testData:
+  delay: true
+  defaultDelay: 100
