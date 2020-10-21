@@ -1,4 +1,6 @@
-![landing](img/landing.png)
+<p align="center">
+  <img src="img/landing.png">
+</p>
 
 # Traefik Fault Injection
 
