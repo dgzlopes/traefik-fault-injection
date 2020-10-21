@@ -3,6 +3,7 @@ package traefik_fault_injection
 
 import (
 	"context"
+	"math/rand"
 	"net/http"
 	"strconv"
 	"time"
@@ -10,55 +11,69 @@ import (
 
 // Config the plugin configuration.
 type Config struct {
-	Delay         bool
-	DelayDuration int
-	Abort         bool
-	AbortCode     int
+	Delay           bool
+	DelayDuration   int
+	DelayPercentage int
+	Abort           bool
+	AbortCode       int
+	AbortPercentage int
 }
 
 // CreateConfig creates the default plugin configuration.
 func CreateConfig() *Config {
 	return &Config{
-		Delay:         true,
-		DelayDuration: 0,
-		Abort:         true,
-		AbortCode:     400,
+		Delay:           true,
+		DelayDuration:   0,
+		DelayPercentage: 100,
+		Abort:           true,
+		AbortCode:       400,
+		AbortPercentage: 100,
 	}
 }
 
 // FaultInjection plugin
 type FaultInjection struct {
-	next          http.Handler
-	Delay         bool
-	DelayDuration int
-	Abort         bool
-	AbortCode     int
-	name          string
+	next            http.Handler
+	Delay           bool
+	DelayDuration   int
+	DelayPercentage int
+	Abort           bool
+	AbortCode       int
+	AbortPercentage int
+	name            string
 }
 
 // New created a new plugin
 func New(ctx context.Context, next http.Handler, config *Config, name string) (http.Handler, error) {
 	return &FaultInjection{
-		Delay:         config.Delay,
-		DelayDuration: config.DelayDuration,
-		Abort:         config.Abort,
-		AbortCode:     config.AbortCode,
-		next:          next,
-		name:          name,
+		Delay:           config.Delay,
+		DelayDuration:   config.DelayDuration,
+		DelayPercentage: config.DelayPercentage,
+		Abort:           config.Abort,
+		AbortCode:       config.AbortCode,
+		AbortPercentage: config.DelayPercentage,
+		next:            next,
+		name:            name,
 	}, nil
 }
 
 func (a *FaultInjection) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	if a.Delay == true {
 		delayHeader := req.Header.Get("X-Traefik-Fault-Delay-Request")
-		time.Sleep(time.Duration(ParseHeaderValue(delayHeader, a.DelayDuration)) * time.Millisecond)
+		delayPercentageHeader := req.Header.Get("X-Traefik-Fault-Delay-Request-Percentage")
+		if FaultShouldRun(ParseHeaderValue(delayPercentageHeader, a.DelayPercentage)) {
+			time.Sleep(time.Duration(ParseHeaderValue(delayHeader, a.DelayDuration)) * time.Millisecond)
+		}
 	}
 
 	if a.Abort == true {
 		abortHeader := req.Header.Get("X-Traefik-Fault-Abort-Request")
+		abortPercentageHeader := req.Header.Get("X-Traefik-Fault-Abort-Request-Percentage")
 		if len(abortHeader) != 0 {
-			rw.WriteHeader(ParseHeaderValue(abortHeader, a.AbortCode))
-			return
+			if FaultShouldRun(ParseHeaderValue(abortPercentageHeader, a.AbortPercentage)) {
+				rw.WriteHeader(ParseHeaderValue(abortHeader, a.AbortCode))
+				return
+			}
 		}
 	}
 	a.next.ServeHTTP(rw, req)
@@ -72,4 +87,9 @@ func ParseHeaderValue(rawValue string, defaultValue int) int {
 		}
 	}
 	return defaultValue
+}
+
+// FaultShouldRun is used to check if the fault should run or not
+func FaultShouldRun(percent int) bool {
+	return rand.Intn(100) <= percent
 }
