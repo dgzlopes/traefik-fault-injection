@@ -12,17 +12,13 @@ Currently supported header controls:
 
 The duration to delay a request by. The header value should be an integer that specifies the number of milliseconds to throttle the latency for.
 
-**x-traefik-fault-delay-request-percentage**
-
-The percentage of requests that should be delayed by a duration that’s defined by the value of `x-traefik-fault-delay-request` HTTP header. The header value should be an integer that specifies the numerator of the percentage of request to apply aborts to and must be greater or equal to 0 and its maximum value is capped to 100.
+> With **x-traefik-fault-delay-request-percentage** you can specify the percentage of requests that should be affected (value: 0-100)
 
 **x-traefik-fault-abort-request**
 
 HTTP status code to abort a request with. The header value should be an integer that specifies the HTTP status code to return in response to a request.
 
-**x-traefik-fault-abort-request-percentage**
-
-The percentage of requests that should be failed with a status code that’s defined by the value of `x-traefik-fault-abort-request` HTTP header. The header value should be an integer that specifies the numerator of the percentage of request to apply aborts to and must be greater or equal to 0 and its maximum value is capped to 100.
+> With **x-traefik-fault-abort-request-percentage** you can specify the percentage of requests that should be affected (value: 0-100)
 
 ### Plugin options
 
