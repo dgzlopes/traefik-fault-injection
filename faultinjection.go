@@ -11,12 +11,12 @@ import (
 
 // Config the plugin configuration.
 type Config struct {
-	Delay           bool
-	DelayDuration   int
-	DelayPercentage int
-	Abort           bool
-	AbortCode       int
-	AbortPercentage int
+	Delay           bool `yaml:"Delay"`
+	DelayDuration   int  `yaml:"DelayDuration"`
+	DelayPercentage int  `yaml:"DelayPercentage"`
+	Abort           bool `yaml:"Abort"`
+	AbortCode       int  `yaml:"AbortCode"`
+	AbortPercentage int  `yaml:"AbortPercentage"`
 }
 
 // CreateConfig creates the default plugin configuration.
@@ -58,7 +58,7 @@ func New(ctx context.Context, next http.Handler, config *Config, name string) (h
 }
 
 func (a *FaultInjection) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
-	if a.Delay == true {
+	if a.Delay {
 		delayHeader := req.Header.Get("X-Traefik-Fault-Delay-Request")
 		delayPercentageHeader := req.Header.Get("X-Traefik-Fault-Delay-Request-Percentage")
 		if FaultShouldRun(ParseHeaderValue(delayPercentageHeader, a.DelayPercentage)) {
@@ -66,7 +66,7 @@ func (a *FaultInjection) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	if a.Abort == true {
+	if a.Abort {
 		abortHeader := req.Header.Get("X-Traefik-Fault-Abort-Request")
 		abortPercentageHeader := req.Header.Get("X-Traefik-Fault-Abort-Request-Percentage")
 		if len(abortHeader) != 0 {
