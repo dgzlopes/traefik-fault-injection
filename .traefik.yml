@@ -8,5 +8,7 @@ summary:  Fault Injection via HTTP headers
 testData:
   Delay: true
   DelayDuration: 100
-  Abort: true
+  DelayPercentage: 100
+  Abort: false
   AbortCode: 400
+  AbortPercentage: 0
