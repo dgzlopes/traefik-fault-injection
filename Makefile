@@ -1,4 +1,4 @@
-.PHONY: lint vendor
+.PHONY: lint vendor test
 
 export GO111MODULE=on
 
@@ -7,3 +7,6 @@ lint:
 
 vendor:
 	go mod vendor
+
+test:
+	go test -v faultinjection_test.go faultinjection.go
