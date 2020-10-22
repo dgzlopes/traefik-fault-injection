@@ -25,7 +25,7 @@ func CreateConfig() *Config {
 		Delay:           true,
 		DelayDuration:   0,
 		DelayPercentage: 100,
-		Abort:           true,
+		Abort:           false,
 		AbortCode:       400,
 		AbortPercentage: 100,
 	}

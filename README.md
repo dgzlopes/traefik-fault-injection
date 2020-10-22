@@ -47,7 +47,7 @@ The percentage of requests that should be delayed.
 
 **Abort**
 
-*Default: true*
+*Default: false*
 
 This determines if the abort failure is enabled.
 
