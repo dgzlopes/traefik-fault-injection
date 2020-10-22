@@ -69,12 +69,10 @@ func (a *FaultInjection) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	if a.Abort {
 		abortHeader := req.Header.Get("X-Traefik-Fault-Abort-Request")
 		abortPercentageHeader := req.Header.Get("X-Traefik-Fault-Abort-Request-Percentage")
-		if len(abortHeader) != 0 {
 		if FaultShouldRun(ParseHeaderValue(abortPercentageHeader, a.AbortPercentage)) {
 			rw.WriteHeader(ParseHeaderValue(abortHeader, a.AbortCode))
 			return
 		}
-	}
 	}
 	a.next.ServeHTTP(rw, req)
 }
