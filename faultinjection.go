@@ -51,7 +51,7 @@ func New(ctx context.Context, next http.Handler, config *Config, name string) (h
 		DelayPercentage: config.DelayPercentage,
 		Abort:           config.Abort,
 		AbortCode:       config.AbortCode,
-		AbortPercentage: config.DelayPercentage,
+		AbortPercentage: config.AbortPercentage,
 		next:            next,
 		name:            name,
 	}, nil
@@ -70,11 +70,11 @@ func (a *FaultInjection) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		abortHeader := req.Header.Get("X-Traefik-Fault-Abort-Request")
 		abortPercentageHeader := req.Header.Get("X-Traefik-Fault-Abort-Request-Percentage")
 		if len(abortHeader) != 0 {
-			if FaultShouldRun(ParseHeaderValue(abortPercentageHeader, a.AbortPercentage)) {
-				rw.WriteHeader(ParseHeaderValue(abortHeader, a.AbortCode))
-				return
-			}
+		if FaultShouldRun(ParseHeaderValue(abortPercentageHeader, a.AbortPercentage)) {
+			rw.WriteHeader(ParseHeaderValue(abortHeader, a.AbortCode))
+			return
 		}
+	}
 	}
 	a.next.ServeHTTP(rw, req)
 }
